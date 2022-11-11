@@ -121,5 +121,15 @@ func fetchParkingLots(x:Double, y:Double){
 <details markdown="1">
 <summary>코드보기</summary>
 
+```swift
+struct FirebaseService{
+    static func reportModification(type:String, name:String, text:String, completion:@escaping(Error?)->Void){
+        let db = Firestore.firestore().collection(type)
+        db.document().setData(["주차장이름": name,"수정내용" : text]) { error in
+            completion(error)
+        }
+    }
+}
+```
 
 </details>
