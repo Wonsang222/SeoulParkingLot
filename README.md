@@ -32,5 +32,87 @@
 ![2-2](https://user-images.githubusercontent.com/92086662/201286643-927d06bd-85ab-44b1-9250-e6fd701c74c9.gif)  
 현재 위치를 불러오는 작업은, 서울 지역내에서만 작동합니다.  
 
+![2-111](https://user-images.githubusercontent.com/92086662/201286955-5950b2e9-c736-4ba5-b4ae-58132a35c0ae.gif)  
+해당 작업은 두개의 비동기 작업인 위,경도(Kakao API) -> 주차장 검색(서울 API)을 거쳐 실행됩니다.  
+그러므로 DispatchGroup을 사용하여 두 개의 비동기 작업을 하나의 동기 작업으로 묶어주었습니다.  
+
+<details>
+<summary>코드보기</summary>
+``` Swift
+func fetchParkingLots(x:Double, y:Double){
+
+        delegate?.clearMapView()
+
+        let group1 = DispatchGroup()
+        
+        delegate?.showHud()
+        
+        group1.enter()
+        NetworkService.fetchAvenue(x: x, y: y) { result in
+            
+            switch result{
+            case .success(let res):
+                for i in res{
+                    self.avenue = i.avenue
+                }
+                group1.leave()
+            case .failure(let err):
+                print(err)
+                self.delegate?.clearHud()
+                return
+            }
+        }
+        
+        group1.notify(queue: .main){
+            if self.avenue == ""{
+                self.delegate?.clearHud()
+                self.delegate?.resetAlarm()
+                return
+            }
+            guard let location = self.avenue else {
+                self.delegate?.clearHud()
+                self.delegate?.resetAlarm()
+                return }
+            
+            self.delegate?.markLocation(x: y, y: x)
+            
+            self.delegate?.clearHud()
+            self.fetchParkingLots2(location: location)
+        }
+    }
+    
+    func fetchParkingLots2(location:String){
+        
+        if location == " " || location == ""{
+            delegate?.resetAlarm()
+            return
+        }
+        
+        delegate?.showHud()
+        
+        let group2 = DispatchGroup()
+        
+        group2.enter()
+        
+        NetworkService.fetchParkingLots(location: location) { result in
+            switch result{
+            case .success(let res):
+                self.parkingLots = res
+                group2.leave()
+            case .failure(let err):
+                print(err)
+                self.delegate?.clearHud()
+                return
+            }
+        }
+        group2.notify(queue: .main){
+            self.delegate?.markParkingLots()
+            self.delegate?.clearHud()
+        }
+    }
+```
+
+
+</details>
 
 
