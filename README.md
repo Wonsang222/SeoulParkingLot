@@ -121,6 +121,8 @@ func fetchParkingLots(x:Double, y:Double){
 <details markdown="1">
 <summary>코드보기</summary>
 
+Firestore Database에 유저들의 정보 수정요청을 카테고리별로 받습니다.  
+
 ```swift
 struct FirebaseService{
     static func reportModification(type:String, name:String, text:String, completion:@escaping(Error?)->Void){
@@ -131,5 +133,8 @@ struct FirebaseService{
     }
 }
 ```
+
+![무제 3](https://user-images.githubusercontent.com/92086662/201298314-69949340-f069-49ad-a9d4-2cc312cb8da8.jpg)  
+
 
 </details>
