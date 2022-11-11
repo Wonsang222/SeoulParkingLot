@@ -36,9 +36,10 @@
 해당 작업은 두개의 비동기 작업인 위,경도(Kakao API) -> 주차장 검색(서울 API)을 거쳐 실행됩니다.  
 그러므로 DispatchGroup을 사용하여 두 개의 비동기 작업을 하나의 동기 작업으로 묶어주었습니다.  
 
-<details>
+<details markdown="1">
 <summary>코드보기</summary>
-``` Swift
+
+```swift
 func fetchParkingLots(x:Double, y:Double){
 
         delegate?.clearMapView()
@@ -110,9 +111,8 @@ func fetchParkingLots(x:Double, y:Double){
             self.delegate?.clearHud()
         }
     }
+
 ```
 
-
 </details>
-
 
